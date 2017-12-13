@@ -10,7 +10,7 @@ E = energy(im, 'gradient');
 
 %% Calculate vertical seam
 
-vert_seam = vertical_seam(im,E);
+[vert_seam,~] = vertical_seam(im,E);
 figure(5), imshow(vert_seam);
 
 % figure(1), imagesc(Gmag), colormap jet;
@@ -22,5 +22,15 @@ figure(5), imshow(vert_seam);
 
 %% Calculate horizontal seam
 
-hor_seam = horizontal_seam(im,E);
+[hor_seam,~] = horizontal_seam(im,E);
 figure(6), imshow(hor_seam);
+
+%% Decrease height
+[rows, cols, ~] = size(im);
+smaller_w_im = change_aspect(im,rows-100,cols);
+
+%% Decrease width
+smaller_h_im = change_aspect(im,rows,cols-30);
+
+%% Decrease aspect ratio optimally
+smaller_a_im = change_aspect(im,rows-30,cols-30);

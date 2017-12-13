@@ -1,4 +1,4 @@
-function seam = vertical_seam(im, E)
+function [seam, total_cost] = vertical_seam(im, E)
     [rows, cols, ~] = size(im);
 
     % create 2d array of subproblems
@@ -26,11 +26,12 @@ function seam = vertical_seam(im, E)
     end
 
     %find starting point (min energy in last row)
-    [~, idx] = min(M(end, 2:cols-1));
+    [val, idx] = min(M(end, 2:cols-1));
 
     %backtrack upward to find best vertical seam
     seam = false(rows,cols);
     seam(rows,idx) = true; 
+    total_cost = val;
     for i = rows-1:-1:1
         left = inf;
         if idx ~= 1
@@ -45,10 +46,11 @@ function seam = vertical_seam(im, E)
         end
         
 
-        [~, j] = min(cat(3, left, center, right));
+        [val, j] = min(cat(3, left, center, right));
+        total_cost = total_cost + val;
         seam(i,idx+j-2) = true;
         idx = idx+j-2;
     end
     
-    figure(), imagesc(M), colormap jet;
+    %figure(), imagesc(M), colormap jet;
 end
