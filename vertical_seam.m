@@ -32,10 +32,18 @@ function seam = vertical_seam(im, E)
     seam = false(rows,cols);
     seam(rows,idx) = true; 
     for i = rows-1:-1:1
-
-        left = M(i, idx-1);
+        left = inf;
+        if idx ~= 1
+            left = M(i, idx-1);
+        end
+        
         center = M(i, idx);
-        right = M(i, idx+1);
+        
+        right = inf;
+        if idx ~= cols
+            right = M(i, idx+1);
+        end
+        
 
         [~, j] = min(cat(3, left, center, right));
         seam(i,idx+j-2) = true;
