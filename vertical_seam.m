@@ -47,7 +47,7 @@ function [seam, total_cost] = vertical_seam(im, E)
         
 
         [val, j] = min(cat(3, left, center, right));
-        total_cost = total_cost + val;
+        %total_cost = total_cost + val;
         seam(i,idx+j-2) = true;
         idx = idx+j-2;
     end

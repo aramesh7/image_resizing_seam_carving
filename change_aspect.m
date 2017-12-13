@@ -120,6 +120,7 @@ function out = change_aspect(im, new_n, new_m)
             [vert_seam,~] = vertical_seam(iterate_im, E);
             iterate_im = cut(iterate_im, vert_seam, 'vertical');
             imshow(iterate_im)
+            %imshow(mat2gray(E))
         end
         
         out = iterate_im;
