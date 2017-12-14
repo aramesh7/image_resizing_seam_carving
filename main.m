@@ -1,14 +1,14 @@
 %% Open image
 close all;
 
-im = imread('sources/me1.jpg');
-%im = imread('sources/bigger.png');
+%im = imread('sources/me1.jpg');
+im = imread('sources/bigger.png');
 
 %imshow(im);
 
 %% Get energy of image
-%energy_type = 'gradient';
-energy_type = 'face';
+energy_type = 'gradient';
+%energy_type = 'face';
 
 E = energy(im, energy_type);
 figure(10), imagesc(E), colormap jet;
@@ -35,11 +35,7 @@ figure(6), imshow(hor_seam);
 smaller_w_im = change_aspect(im,rows-100,cols,energy_type);
 
 %% Decrease width
-<<<<<<< HEAD
-smaller_h_im = change_aspect(im,rows,cols-15);
-=======
 smaller_h_im = change_aspect(im,rows,cols-30,energy_type);
->>>>>>> bdc1dfe8c5abba3b96fc88cba5691cf36a79dbe4
 
 %% Decrease aspect ratio optimally
 smaller_a_im = change_aspect(im,rows-30,cols-30,energy_type);
@@ -50,8 +46,8 @@ imshow(enlarged)
 
 %% content amplification (just scaling + seam carving back to original)
 [rows, cols, ~] = size(im);
-enlarged = imresize(im,[rows cols+50]);
-amplified = change_aspect(enlarged,rows,cols);
+enlarged = imresize(im,[rows+50 cols+50]);
+amplified = change_aspect(enlarged,rows,cols,energy_type);
 
 %% seam carving in the gradient domain
 % Decrease width
