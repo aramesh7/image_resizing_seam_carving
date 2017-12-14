@@ -1,12 +1,15 @@
 %% Open image
 close all;
 
-im = imread('sources/arch_sunset.jpg');
+im = imread('sources/me1.jpg');
 %imshow(im);
 
 %% Get energy of image
-E = energy(im, 'gradient');
-%figure (1), imagesc(E), colormap jet;
+%energy_type = 'gradient';
+energy_type = 'face';
+
+E = energy(im, energy_type);
+figure(10), imagesc(E), colormap jet;
 
 %% Calculate vertical seam
 
@@ -27,13 +30,13 @@ figure(6), imshow(hor_seam);
 
 %% Decrease height
 [rows, cols, ~] = size(im);
-smaller_w_im = change_aspect(im,rows-100,cols);
+smaller_w_im = change_aspect(im,rows-100,cols,energy_type);
 
 %% Decrease width
-smaller_h_im = change_aspect(im,rows,cols-100);
+smaller_h_im = change_aspect(im,rows,cols-250,energy_type);
 
 %% Decrease aspect ratio optimally
-smaller_a_im = change_aspect(im,rows-30,cols-30);
+smaller_a_im = change_aspect(im,rows-30,cols-30,energy_type);
 
 %% enlarge
 enlarged = enlarge(im,150,'width');
@@ -43,4 +46,4 @@ imshow(enlarged)
 [rows, cols, ~] = size(im);
 enlarged = enlarge(im,50,'height');
 enlarged = enlarge(enlarged,50,'width');
-amplified = change_aspect(enlarged,rows,cols);
+amplified = change_aspect(enlarged,rows,cols,energy_type);
