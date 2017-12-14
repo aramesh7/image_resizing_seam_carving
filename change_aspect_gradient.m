@@ -126,18 +126,18 @@ function out = change_aspect(im, new_n, new_m)
             [vert_seam,~] = vertical_seam(iterate_im, E);
             iterate_im = cut(E, vert_seam, 'vertical');
             Fxr = cut(Fxr, vert_seam, 'vertical');
-            %Fyr = cut(Fyr, vert_seam, 'vertical');
+            Fyr = cut(Fyr, vert_seam, 'vertical');
             Fxg = cut(Fxg, vert_seam, 'vertical');
-            %Fyg = cut(Fyg, vert_seam, 'vertical');
+            Fyg = cut(Fyg, vert_seam, 'vertical');
             Fxb = cut(Fxb, vert_seam, 'vertical');
-            %Fyb = cut(Fyb, vert_seam, 'vertical');
+            Fyb = cut(Fyb, vert_seam, 'vertical');
             pass1 = iterate_im;
             pass2 = iterate_im;
             pass3 = iterate_im;
             iterate_im(:,:,1) = poisson_reconstruct(Fxr, Fyr, pass1);
             iterate_im(:,:,2) = poisson_reconstruct(Fxg, Fyg, pass2);
             iterate_im(:,:,3) = poisson_reconstruct(Fxb, Fyb, pass3);
-            iterate_im = mat2gray(iterate_im);
+            %iterate_im = imadjust(mat2gray(iterate_im),[],[],0.85);
             imshow(iterate_im)
             %imshow(vert_seam)
             %imshow(mat2gray(E))

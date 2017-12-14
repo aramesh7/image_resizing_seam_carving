@@ -29,8 +29,8 @@ function im_out = toy_reconstruct(Fx,Fy,im)
         end
     end
     e=e+1;
-    A(e, im2var(1,1))=1;
-    b(e)=s(1,1);
+    A(e, im2var(50,50))=1;
+    b(e)=s(50,50);
     
     %cut down A
     [bh,bw] = size(b);

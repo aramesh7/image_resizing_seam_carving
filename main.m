@@ -30,7 +30,7 @@ figure(6), imshow(hor_seam);
 smaller_w_im = change_aspect(im,rows-100,cols);
 
 %% Decrease width
-smaller_h_im = change_aspect(im,rows,cols-30);
+smaller_h_im = change_aspect(im,rows,cols-15);
 
 %% Decrease aspect ratio optimally
 smaller_a_im = change_aspect(im,rows-30,cols-30);
@@ -41,8 +41,7 @@ imshow(enlarged)
 
 %% content amplification (just scaling + seam carving back to original)
 [rows, cols, ~] = size(im);
-enlarged = enlarge(im,50,'height');
-enlarged = enlarge(enlarged,50,'width');
+enlarged = imresize(im,[rows cols+50]);
 amplified = change_aspect(enlarged,rows,cols);
 
 %% seam carving in the gradient domain
