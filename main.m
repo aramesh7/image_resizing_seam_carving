@@ -2,6 +2,8 @@
 close all;
 
 im = imread('sources/me1.jpg');
+%im = imread('sources/bigger.png');
+
 %imshow(im);
 
 %% Get energy of image
@@ -33,7 +35,7 @@ figure(6), imshow(hor_seam);
 smaller_w_im = change_aspect(im,rows-100,cols,energy_type);
 
 %% Decrease width
-smaller_h_im = change_aspect(im,rows,cols-250,energy_type);
+smaller_h_im = change_aspect(im,rows,cols-30,energy_type);
 
 %% Decrease aspect ratio optimally
 smaller_a_im = change_aspect(im,rows-30,cols-30,energy_type);
@@ -47,3 +49,7 @@ imshow(enlarged)
 enlarged = enlarge(im,50,'height');
 enlarged = enlarge(enlarged,50,'width');
 amplified = change_aspect(enlarged,rows,cols,energy_type);
+
+%% seam carving in the gradient domain
+% Decrease width
+smaller_g_im = change_aspect_gradient(im,rows,cols-30,energy_type);
