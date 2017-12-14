@@ -10,10 +10,13 @@ im = imread('sources/bigger.png');
 energy_type = 'gradient';
 %energy_type = 'face';
 
-E = energy(im, energy_type);
-figure(10), imagesc(E), colormap jet;
+%% Object removal
+%edited_image = object_removal(im, energy_type);
+
 
 %% Calculate vertical seam
+E = energy(im, energy_type);
+%figure(10), imagesc(E), colormap jet;
 
 [vert_seam,~] = vertical_seam(im,E);
 figure(5), imshow(vert_seam);
