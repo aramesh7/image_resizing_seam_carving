@@ -1,7 +1,7 @@
 %% Open image
 close all;
 
-im = imread('sources/enlarging_input.png');
+im = imread('sources/arch_sunset.jpg');
 %imshow(im);
 
 %% Get energy of image
@@ -36,5 +36,11 @@ smaller_h_im = change_aspect(im,rows,cols-100);
 smaller_a_im = change_aspect(im,rows-30,cols-30);
 
 %% enlarge
-enlarged = enlarge(im,50,'width');
+enlarged = enlarge(im,150,'width');
 imshow(enlarged)
+
+%% content amplification (just scaling + seam carving back to original)
+[rows, cols, ~] = size(im);
+enlarged = enlarge(im,50,'height');
+enlarged = enlarge(enlarged,50,'width');
+amplified = change_aspect(enlarged,rows,cols);

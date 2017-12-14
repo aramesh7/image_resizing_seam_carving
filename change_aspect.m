@@ -4,6 +4,8 @@ function out = change_aspect(im, new_n, new_m)
     
     r = n - new_n;%# rows to cut
     c = m - new_m;%# cols to cut
+    r+1
+    c+1
     
     %both dimensions smaller
     if c>0 && r>0
@@ -119,7 +121,7 @@ function out = change_aspect(im, new_n, new_m)
             E = energy(iterate_im, 'gradient');
             [vert_seam,~] = vertical_seam(iterate_im, E);
             iterate_im = cut(iterate_im, vert_seam, 'vertical');
-            %imshow(iterate_im)
+            imshow(iterate_im)
             %imshow(vert_seam)
             %imshow(mat2gray(E))
         end
