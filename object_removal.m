@@ -28,5 +28,8 @@ function output = object_removal(im,energy_type)
             imshow(im_i)
         end
     end
-    output = change_aspect(im_i, h,w,energy_type);
+    
+    [h_new, w_new, ~] = size(im_i);
+    output = enlarge(im_i,w-w_new,'width');
+    output = enlarge(output,h-h_new,'height');
 end

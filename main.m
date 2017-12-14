@@ -2,17 +2,17 @@
 close all;
 
 %im = imread('sources/me1.jpg');
-im = imread('sources/bigger.png');
+im = imread('sources/balloon1.jpg');
 
 %imshow(im);
 
-%% Get energy of image
+% Get energy of image
 energy_type = 'gradient';
 %energy_type = 'face';
 
 %% Object removal
-%edited_image = object_removal(im, energy_type);
-
+edited_image = object_removal(im, energy_type);
+figure(11), imshow(edited_image);
 
 %% Calculate vertical seam
 E = energy(im, energy_type);
@@ -46,7 +46,8 @@ smaller_a_im = change_aspect(im,rows-30,cols-30,energy_type);
 %% enlarge
 enlarged = enlarge(im,150,'width');
 imshow(enlarged)
-
+enlarged = enlarge(im,50,'height');
+imshow(enlarged)
 %% content amplification (just scaling + seam carving back to original)
 [rows, cols, ~] = size(im);
 enlarged = imresize(im,[rows+50 cols+50]);

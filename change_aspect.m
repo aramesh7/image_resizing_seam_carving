@@ -1,6 +1,7 @@
 % new_n is the new number of rows. new_m is the new number of cols.
 function out = change_aspect(im, new_n, new_m, energy_type)
     [n, m, ~] = size(im);
+    out = zeros();
     
     r = n - new_n;%# rows to cut
     c = m - new_m;%# cols to cut
