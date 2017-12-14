@@ -1,7 +1,7 @@
 %% Open image
 close all;
 
-im = imread('sources/img1.png');
+im = imread('sources/enlarging_input.png');
 %imshow(im);
 
 %% Get energy of image
@@ -30,7 +30,11 @@ figure(6), imshow(hor_seam);
 smaller_w_im = change_aspect(im,rows-100,cols);
 
 %% Decrease width
-smaller_h_im = change_aspect(im,rows,cols-30);
+smaller_h_im = change_aspect(im,rows,cols-100);
 
 %% Decrease aspect ratio optimally
 smaller_a_im = change_aspect(im,rows-30,cols-30);
+
+%% enlarge
+enlarged = enlarge(im,50,'width');
+imshow(enlarged)

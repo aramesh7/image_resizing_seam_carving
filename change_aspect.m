@@ -119,7 +119,8 @@ function out = change_aspect(im, new_n, new_m)
             E = energy(iterate_im, 'gradient');
             [vert_seam,~] = vertical_seam(iterate_im, E);
             iterate_im = cut(iterate_im, vert_seam, 'vertical');
-            imshow(iterate_im)
+            %imshow(iterate_im)
+            %imshow(vert_seam)
             %imshow(mat2gray(E))
         end
         
@@ -134,6 +135,7 @@ function out = change_aspect(im, new_n, new_m)
             [horz_seam,~] = horizontal_seam(iterate_im, E);
             iterate_im = cut(iterate_im, horz_seam, 'horizontal');
             imshow(iterate_im)
+            %imshow(horz_seam)
         end
         
         out = iterate_im;
