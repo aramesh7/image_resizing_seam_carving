@@ -1,17 +1,17 @@
 %% Open image
 close all;
 
-im = imread('sources/me1.jpg');
+im = imread('sources/bigger.png');
 %im = imread('sources/bigger.png');
 
 %imshow(im);
 
 %% Get energy of image
-%energy_type = 'gradient';
-energy_type = 'face';
-
+energy_type = 'gradient';
+%energy_type = 'face';
+%edited_image = object_removal(im, energy_type);
 E = energy(im, energy_type);
-figure(10), imagesc(E), colormap jet;
+%figure(10), imagesc(E), colormap jet;
 
 %% Calculate vertical seam
 
@@ -56,3 +56,6 @@ amplified = change_aspect(enlarged,rows,cols);
 %% seam carving in the gradient domain
 % Decrease width
 smaller_g_im = change_aspect_gradient(im,rows,cols-30,energy_type);
+
+%% Object removal
+%edited_image = object_removal(im, energy_type);
