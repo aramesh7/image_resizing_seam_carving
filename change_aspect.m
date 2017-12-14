@@ -1,5 +1,5 @@
 % new_n is the new number of rows. new_m is the new number of cols.
-function out = change_aspect(im, new_n, new_m)
+function out = change_aspect(im, new_n, new_m, energy_type)
     [n, m, ~] = size(im);
     
     r = n - new_n;%# rows to cut
@@ -30,7 +30,7 @@ function out = change_aspect(im, new_n, new_m)
                     %no last row. only last column.
                     chosen(i,j) = 0;
                     curr = cell2mat(last_col_vec(i));
-                    [vert_seam,cost] = vertical_seam(curr,energy(curr,'gradient'));
+                    [vert_seam,cost] = vertical_seam(curr,energy(curr,energy_type));
                     cut_curr = cut(curr, vert_seam, 'vertical');
                     last_row = cut_curr;
                     last_col_vec{i} = cut_curr;
@@ -41,7 +41,7 @@ function out = change_aspect(im, new_n, new_m)
                     %no last column. only last row.
                     chosen(i,j) = 1;
                     curr = last_row;
-                    [horz_seam,cost] = horizontal_seam(curr,energy(curr,'gradient'));
+                    [horz_seam,cost] = horizontal_seam(curr,energy(curr,energy_type));
                     cut_curr = cut(curr, horz_seam, 'horizontal');
                     last_row = cut_curr;
                     last_col_vec{i} = cut_curr;
@@ -49,10 +49,10 @@ function out = change_aspect(im, new_n, new_m)
                     continue
                 end
                 
-                [horz_seam,hcost] = horizontal_seam(last_row,energy(last_row,'gradient'));
+                [horz_seam,hcost] = horizontal_seam(last_row,energy(last_row,energy_type));
                 cut_horz = cut(last_row, horz_seam, 'horizontal');
                 
-                [vert_seam,vcost] = vertical_seam(cell2mat(last_col_vec(i)),energy(cell2mat(last_col_vec(i)),'gradient'));
+                [vert_seam,vcost] = vertical_seam(cell2mat(last_col_vec(i)),energy(cell2mat(last_col_vec(i)),energy_type));
                 cut_vert = cut(cell2mat(last_col_vec(i)), vert_seam, 'vertical');
                 
                 if (T(i-1,j) + hcost) < (T(i,j-1)+vcost) 
@@ -97,12 +97,12 @@ function out = change_aspect(im, new_n, new_m)
         iterate_im = im;
         for i = 1:size(ops)
             if ops(i) == 0 %vertical
-                E = energy(iterate_im, 'gradient');
+                E = energy(iterate_im, energy_type);
                 [vert_seam,~] = vertical_seam(iterate_im, E);
                 iterate_im = cut(iterate_im, vert_seam, 'vertical');
                 imshow(iterate_im)
             else
-                E = energy(iterate_im, 'gradient');
+                E = energy(iterate_im, energy_type);
                 [horz_seam,~] = horizontal_seam(iterate_im, E);
                 iterate_im = cut(iterate_im, horz_seam, 'horizontal');
                 imshow(iterate_im)
@@ -118,7 +118,7 @@ function out = change_aspect(im, new_n, new_m)
         iterate_im = im;
         
         for i = 1:c %cut vertical seam c times
-            E = energy(iterate_im, 'gradient');
+            E = energy(iterate_im, energy_type);
             [vert_seam,~] = vertical_seam(iterate_im, E);
             iterate_im = cut(iterate_im, vert_seam, 'vertical');
             imshow(iterate_im)
@@ -133,7 +133,7 @@ function out = change_aspect(im, new_n, new_m)
         iterate_im = im;
         
         for i = 1:r %cut horizontal seam r times
-            E = energy(iterate_im, 'gradient');
+            E = energy(iterate_im, energy_type);
             [horz_seam,~] = horizontal_seam(iterate_im, E);
             iterate_im = cut(iterate_im, horz_seam, 'horizontal');
             imshow(iterate_im)

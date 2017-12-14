@@ -1,12 +1,17 @@
 %% Open image
 close all;
 
-im = imread('sources/bigger.png');
+im = imread('sources/me1.jpg');
+%im = imread('sources/bigger.png');
+
 %imshow(im);
 
 %% Get energy of image
-E = energy(im, 'gradient');
-%figure (1), imagesc(E), colormap jet;
+%energy_type = 'gradient';
+energy_type = 'face';
+
+E = energy(im, energy_type);
+figure(10), imagesc(E), colormap jet;
 
 %% Calculate vertical seam
 
@@ -27,13 +32,17 @@ figure(6), imshow(hor_seam);
 
 %% Decrease height
 [rows, cols, ~] = size(im);
-smaller_w_im = change_aspect(im,rows-100,cols);
+smaller_w_im = change_aspect(im,rows-100,cols,energy_type);
 
 %% Decrease width
+<<<<<<< HEAD
 smaller_h_im = change_aspect(im,rows,cols-15);
+=======
+smaller_h_im = change_aspect(im,rows,cols-30,energy_type);
+>>>>>>> bdc1dfe8c5abba3b96fc88cba5691cf36a79dbe4
 
 %% Decrease aspect ratio optimally
-smaller_a_im = change_aspect(im,rows-30,cols-30);
+smaller_a_im = change_aspect(im,rows-30,cols-30,energy_type);
 
 %% enlarge
 enlarged = enlarge(im,150,'width');
@@ -46,4 +55,4 @@ amplified = change_aspect(enlarged,rows,cols);
 
 %% seam carving in the gradient domain
 % Decrease width
-smaller_g_im = change_aspect_gradient(im,rows,cols-30);
+smaller_g_im = change_aspect_gradient(im,rows,cols-30,energy_type);
