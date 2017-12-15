@@ -1,0 +1,251 @@
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title></title>
+</head>
+<body>
+<p><span style="font-size:36px;"><strong>Seam Carving for Content-Aware Image Resizing</strong></span></p>
+
+<p><span style="font-size:16px;">This project is based on Shai Avidan and Ariel Shamir&#39;s paper, which can be found here:&nbsp;https://inst.eecs.berkeley.edu/~cs194-26/fa16/hw/proj4-seamcarving/imret.pdf</span></p>
+
+<p><span style="font-size:28px;"><strong>Motivation</strong></span></p>
+
+<p>Image resizing is important for websites or graphic design projects. Websites need this feature because they frequently need to dynamically scale based on window size, or if the user is on a mobile device. Graphic design projects need this in order for an image to fit the composition of the project in a visually appealing manner.</p>
+
+<p>Standard methods for resizing images, such as&nbsp;cropping, do the job, but frequently cut out portions of the image that we consider important. Rescaling does not cut out portions of the image, but it squishes the important items in the image to a small size. By definition, cropping usually occurs on the peripheries of the image. You could extend that to taking away columns on the inside of the image that are undesirable (i.e. unimportant to the viewer defined by some metric, sometimes a gradient-based &#39;energy function&#39;), but it leads to artifacts&nbsp;in the image. As such, this is where the &#39;seam carving&#39; idea comes in; you crop from the inside of the image by finding a least-cost (cost being defined by the usually gradient-based &#39;energy function&#39;)&nbsp;seam (like in our texture synthesis project), and removing that seam instead of a whole column. It may still lead to artifacts, but by definition they will be less noticeable than taking a whole column out. Comparisons of the methods just described for image resizing are shown below.</p>
+
+<p>As you can see below, seam carving can lead to good image resizing results that preserve important information in the image while creating near-minimal artifacts in the image. (The lamp posts and trees and other fine detail is retained in the seam carving version).</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original</p>
+
+			<p><img alt="" src="/cs445/project/crop_reg.jpg" style="width: 500px; height: 281px;" /></p>
+
+			<p></p>
+
+			<p></p>
+			</td>
+			<td>
+			<p>Cropped (Width)</p>
+
+			<p><img alt="" src="/cs445/project/crop_cropped.jpg" style="width: 450px; height: 315px;" /></p>
+
+			<p></p>
+			</td>
+			<td>
+			<p>Scaled (Width)</p>
+
+			<p><img alt="" src="/cs445/project/crop_scale.jpg" style="width: 450px; height: 253px;" /></p>
+
+			<p></p>
+			</td>
+			<td>
+			<p>Columns Removed</p>
+
+			<p><img alt="" src="/cs445/project/crop_col.jpg" style="width: 450px; height: 271px;" /></p>
+			</td>
+			<td>
+			<p>Seams Removed (Width)</p>
+
+			<p><img alt="" src="/cs445/project/crop_seam.jpg" style="width: 470px; height: 310px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><br />
+<strong><span style="font-size:26px;">Energy Functions</span></strong><span style="font-size:28px;"><strong>Approach</strong></span></p>
+
+<p>In order to determine which parts of an image to delete, we have to determine which pixels contain the most &#39;important&#39; content. There are several such ways to do this, but the main energy function we will use is a simple gradient in the x and y directions, as calculated from MATLAB&#39;s library function; from this gradient we can find the magnitude of the gradient at each pixel. The magnitude of the gradient at each pixel is the energy function we will use; basically, we try not to seam cut the pixels with a high gradient magnitude, as they contain &#39;important&#39; content. An image and its &#39;energy&#39; function based on the method just described is shown below.</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original</p>
+
+			<p><img alt="" src="/cs445/project/sunny.jpg" style="width: 800px; height: 600px;" /></p>
+			</td>
+			<td>
+			<p>Gradient-defined energy of image</p>
+
+			<p><img alt="" src="/cs445/project/sunny_e.jpg" style="width: 800px; height: 600px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><span style="font-size:26px;"><strong>Finding the Optimal Seam</strong></span></p>
+
+<p>The optimal seam path is defined as the one that cuts through the least amount of energy possible. We can find this with a simple dynamic programming algorithm. The recurrence for vertical seams is as follows, for E = energy function,&nbsp;M = the array containing the costs, M(i,j) = the minimal cost of a path that goes from the top to pixel (i,j):</p>
+
+<p>M(i,j) = E(i.j) + min(M(i-1,j-1),M(i-1,j),M(i-1,j+1)</p>
+
+<p>The top row is initialized to E(i.j), and the algorithm starts from the second row. When the algorithm is complete, the minimum value in the last row of M corresponds to the last pixel of the optimal seam cut; backtrack through M to find the entire optimal seam cut.</p>
+
+<p>The algorithm for horizontal seams is trivial, because it can be computed by transposing the image or just flipping the row, column values in the recurrence.</p>
+
+<p>An optimal horizontal and vertical seam for an image is displayed below.</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original<img alt="" src="/cs445/project/syria.jpg " style="width: 308px; height: 173px;" /></p>
+			</td>
+			<td>
+			<p>Optimal seams</p>
+
+			<p><img alt="" src="/cs445/project/syria_seam.jpg" style="width: 308px; height: 173px;" /></p>
+
+			<p></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong><span style="font-size:26px;">Decrease Width or Height</span></strong></p>
+
+<p>Once we know what the optimal seam is for any given image, it is simple to decrease the height or width.</p>
+
+<p>In a height change, let the amount of horizontal seams to remove equal r = m-m&#39; for an image of size nxm.</p>
+
+<p>In a width change, let the amount of vertical seams to remove equal c = n-n&#39; for an image of size nxm.</p>
+
+<p>Iteratively compute the seam, then remove it from the image until the desired height or width is attained.</p>
+
+<p>Examples of this process are below.</p>
+
+<p><i>Decrease width of image:</i></p>
+
+<p>Before</p>
+
+<p><img alt="" src="/cs445/project/quad.jpg" style="width: 800px; height: 600px;" />&nbsp;</p>
+
+<p>After</p>
+
+<p><img alt="" src="/cs445/project/quad_height.jpg" style="width: 800px; height: 350px;" /></p>
+
+<p><i>Decrease height of image:</i></p>
+
+<p>Before</p>
+
+<p><img alt="" src="/cs445/project/beach.jpg" /></p>
+
+<p>After</p>
+
+<p><img alt="" src="/cs445/project/beach_width.jpg" /></p>
+
+<p><span style="font-size:26px;"><strong>Optimal Seams-Order (Decrease Both Width and Height/Aspect Ratio Change)</strong></span></p>
+
+<p>If the user wants to change both the width and height at the same time, finding the optimal way to resize it is not obvious. This is because we don&#39;t know the order by which to apply the horizontal and vertical seam removals. As such, we take to dynamic programming.&nbsp;</p>
+
+<p>Let there be a matrix T where T(0,0) = 0. Each entry T(r,c) is filled according to this recurrence:</p>
+
+<p>T(r,c) = min(T(r-1,c)+E(optimalseamhorizontal(I(n-r-1xm-c))),&nbsp;T(r,c&minus;1) +E(optimalseamvertical(I(n&minus;rxm&minus;c&minus;1)))</p>
+
+<p>T(r,c) corresponds to how much it minimally costs to best cut r rows and c columns. E(optimalseam) refers to the cost of the seam. I(nxm) refers to an image of size nxm. As such, we pick the minimum operation, and it is stored such that if the minimum operation is the top neighbor, we do a horizontal seam cut, and if it is the left neighbor we do a vertical seam cut. Once we have found this transport map (either for the whole image or just the amount of rows and columns you want to delete), we go from T(r,c) where r = rows to remove and c = columns to remove and backtrack by taking either the top neighbor (corresponding to a horizontal cut) or the left neighbor (corresponding to a vertical cut), whichever is minimal. The path we backtrack through the matrix T tells us the order we should apply the seam removal in.</p>
+
+<p>Here is an image, and its corresponding transport map. Black = lowest intensity, White = highest&nbsp;intensity.&nbsp;The optimal path to go through (if we wanted to delete all of the image&#39;s rows and columns) is plotted through it. When we want to delete less rows and columns, the path starts farther away from the lower right side of the map.</p>
+
+<p><img alt="" src="/cs445/project/krannertbefore.jpg" style="width: 200px; height: 150px;" />&nbsp;-&gt;&nbsp;<img alt="" src="/cs445/project/transportmap.jpg" style="width: 199px; height: 149px;" /></p>
+
+<p>Once we have the seam removal order, it is simple to decrease the image size; we iteratively compute the seam we want to remove next, then remove it from the image until we have removed all necessary seams and the&nbsp;image is the proper size.</p>
+
+<p>Examples of this process are below.</p>
+
+<p><img alt="" src="/cs445/project/krannertbefore.jpg" style="width: 200px; height: 150px;" />&nbsp;-&gt; width and height lessened with seam carving according to T -&gt;&nbsp;<img alt="" src="/cs445/project/krannertafter.jpg" style="width: 150px; height: 120px;" /></p>
+
+<p></p>
+
+<p><span style="font-size:26px;"><strong>Image Enlarging</strong></span></p>
+
+<p>If we want to enlarge an image, we can do this by finding the optimal seam to remove, but instead of removing it we copy each pixel on the seam&#39;s value to the right of the seam. If we do this naively, we will likely just find the same seam over and over and the result will look bad and heavily artifacted. This result is pictured below.</p>
+
+<p><img alt="" src="/cs445/project/enlarge_before.jpg" style="width: 410px; height: 231px;" />&nbsp;-&gt; enlarge width by 100 px -&gt;&nbsp;<img alt="" src="/cs445/project/enlarge_after_bad.jpg" style="width: 510px; height: 231px;" /></p>
+
+<p>Instead, if we find the k-most optimal seams (k defined by how many pixels we want to expand by), the result will look much more natural because it copies seams in different locations. We can find the k-most optimal seams by downsizing the image k times. However, in our result, instead of &#39;downsizing&#39; using these seams, we &#39;enlarge&#39; by duplicating them; as such, it gives the effect of reversing the deletion process. It is easy to think of in terms of this process restoring a hypothetical larger image that has already&nbsp;had k seams removed (basically, our input). The result of this process is pictured below.&nbsp;</p>
+
+<p><img alt="" src="/cs445/project/enlarge_before.jpg" style="width: 410px; height: 231px;" />&nbsp;-&gt; enlarge width by 100px -&gt;&nbsp;<img alt="" src="/cs445/project/enlarge_after_good.jpg" style="width: 510px; height: 231px;" /></p>
+
+<p></p>
+
+<p><span style="font-size:26px;"><strong>Content Amplification</strong></span></p>
+
+<p>We can amplify the content (the important sections of the image) of an image by first scaling the image regularly, and then deleting enough seams to get back the original input image size. This works because scaling the image up&nbsp;makes the content a bigger size, and doing seam deletion on this image with bigger content maintains the important content, but deletes the background, so it effectively keeps an amplified version of the important content. This process is shown below.</p>
+
+<p>(Image from&nbsp;http://www.jattdisite.com/wp-content/uploads/2015/08/Beautiful-Butterfly.jpg)</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original</p>
+
+			<p><img alt="" src="/cs445/project/reg_butterfly.jpg" style="width: 231px; height: 176px;" /></p>
+
+			<p></p>
+			</td>
+			<td>
+			<p>Scaled</p>
+
+			<p><img alt="" src="/cs445/project/enlarged_butterfly.jpg" style="width: 331px; height: 191px;" /></p>
+			</td>
+			<td>
+			<p>Amplified (seam carved on scaled)</p>
+
+			<p><img alt="" src="/cs445/project/amp_butterfly.jpg" style="width: 231px; height: 176px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><span style="font-size:26px;"><strong>Seam Carving in the Gradient Domain</strong></span></p>
+
+<p>In some pictures, the seam carving process creates artifacts that are a result of working in the spatial domain. Instead we can simply remove seams from the gradient domain. We do this by taking finding the optimal seam as normal, but then we take the gradient images of the image we want to downsize and apply the seam removal to the gradient images instead. Once we have removed the seam from the gradient images, we can reconstruct the downsized gradient images into the spatial domain by using a Poisson solver that is similar to the one we implemented in project 3.&nbsp;</p>
+
+<p>The result of this process is pictured below. You can see in the standard image reduction that there are artifacts; on the edge of the table on the lower right side there are obvious seam artifacts, for example. This does not exist in the gradient-domain-carved image.&nbsp;</p>
+
+<p>Image from&nbsp;<span style="font-size:16px;">https://inst.eecs.berkeley.edu/~cs194-26/fa16/hw/proj4-seamcarving/imret.pdf.</span></p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original image</p>
+
+			<p><img alt="" src="/cs445/project/bigger.png" style="width: 140px; height: 101px;" /></p>
+			</td>
+			<td>
+			<p>Width reduced 5%(regular)</p>
+
+			<p><img alt="" src="/cs445/project/15_removed_reg.png" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>Width reduced 5%&nbsp;(poisson)</p>
+
+			<p><img alt="" src="/cs445/project/15_removed.png" style="width: 130px; height: 101px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p></p>
+
+<p><span style="font-size:26px;"><strong>Object Removal / Protection</strong></span></p>
+
+<p><strong><span style="font-size:26px;">Face Detection</span></strong></p>
+
+<p><strong><span style="font-size:26px;">Video Aspect Ratio Change</span></strong></p>
+
+<p><strong><span style="font-size:26px;">Alternative Energy Functions</span></strong></p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
+</body>
+</html>
