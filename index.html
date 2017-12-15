@@ -238,6 +238,54 @@
 
 <p><strong><span style="font-size:26px;">Face Detection</span></strong></p>
 
+<p>We use an inbuilt face detector in MATLAB, vision.CascadeObjectDetector() which uses the Viola-Jones algorithm to detect faces. Then, we can change the energy function to be really high (we picked infinite) for the pixels which constitute the detected face. This ensures that the seam carving algorithm will not try to cut through the face until there are no other seams available.&nbsp;</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original image</p>
+
+			<p><img alt="" src="/cs445/project/me1.jpg" style="width: 140px; height: 101px;" /></p>
+			</td>
+			<td>
+			<p>Reducing height with gradient energy function</p>
+
+			<p><img alt="" src="/cs445/project/ram_gradient.jpg" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>Reducing height with face detection</p>
+
+			<p><img alt="" src="/cs445/project/ram_face.jpg" style="width: 130px; height: 101px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Another example:</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original image</p>
+
+			<p><img alt="" src="/cs445/project/face1.jpg" style="width: 140px; height: 101px;" /></p>
+			</td>
+			<td>
+			<p>Reducing height with gradient energy function</p>
+
+			<p><img alt="" src="/cs445/project/face_gradient.jpg" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>Reducing height with face detection</p>
+
+			<p><img alt="" src="/cs445/project/face_face.jpg" style="width: 130px; height: 101px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 <p><strong><span style="font-size:26px;">Video Aspect Ratio Change</span></strong></p>
 
 <p><strong><span style="font-size:26px;">Alternative Energy Functions</span></strong></p>
