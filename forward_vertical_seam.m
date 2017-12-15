@@ -91,6 +91,6 @@ function [seam, total_cost] = forward_vertical_seam(im_input)
         idx = idx+j-2;
     end
     
-    figure(4), imagesc(M), colormap jet;
+    figure(7), imagesc(M), colormap jet;
 
 end

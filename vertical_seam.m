@@ -52,5 +52,5 @@ function [seam, total_cost] = vertical_seam(im, E)
         idx = idx+j-2;
     end
     
-    %figure(), imagesc(M), colormap jet;
+    figure(5), imagesc(M), colormap jet;
 end

@@ -236,6 +236,75 @@
 
 <p><span style="font-size:26px;"><strong>Object Removal / Protection</strong></span></p>
 
+<p>Object removal is an interesting application of seam carving. The idea is to allow the user to select a region of their picture that they would like removed from the photo. We then modify the energy values i.e. the cost of having a seam go through the object to be extremely low. In other words, we make it favorable to remove the pixels in the selected region. Initially, we wanted to set the cost to be -inf. However, this allows ANY path within the selected object to be of minimum cost and indeed the longest&nbsp;seam within that object (most oblique) will be the one chosen.&nbsp;Instead, we set the cost of the selected region to be -max(width, height)*max(Energy(:)). This lower bounds seam cost to 0. Object protection is simply the inverse of this, an instance of which is facial feature preservation, done in the next section.</p>
+
+<p>The example similar to that in the paper&nbsp;</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original image</p>
+
+			<p><img alt="" src="/cs445/project/hands.jpg" style="width: 140px; height: 101px;" /></p>
+			</td>
+			<td>
+			<p>&nbsp;Region to be removed selected image</p>
+
+			<p><img alt="" src="/cs445/project/hands_selected.jpg" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>Object Removed image</p>
+
+			<p><img alt="" src="/cs445/project/divorce.jpg" style="width: 130px; height: 101px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Another example: What would&#39;ve been such a nice picture was ruined. With seam carving, we can fix it, however.&nbsp;</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original image</p>
+
+			<p><img alt="" src="/cs445/project/photobomb.jpg" style="width: 140px; height: 101px;" /></p>
+			</td>
+			<td>
+			<p>Region to be removed selected from image</p>
+
+			<p><img alt="" src="/cs445/project/photobomb_selected.jpg" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>Object Removed image</p>
+
+			<p><img alt="" src="/cs445/project/photobomb_fixed.jpg" style="width: 130px; height: 101px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Another example: Find the missing car!!</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original image</p>
+
+			<p><img alt="" src="/cs445/project/traffic.jpg" style="width: 140px; height: 101px;" /></p>
+			</td>
+			<td>
+			<p>Object Removed image</p>
+
+			<p><img alt="" src="/cs445/project/missing_car.jpg" style="width: 130px; height: 101px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 <p><strong><span style="font-size:26px;">Face Detection</span></strong></p>
 
 <p>We use an inbuilt face detector in MATLAB, vision.CascadeObjectDetector() which uses the Viola-Jones algorithm to detect faces. Then, we can change the energy function to be really high (we picked infinite) for the pixels which constitute the detected face. This ensures that the seam carving algorithm will not try to cut through the face until there are no other seams available.&nbsp;</p>
@@ -286,14 +355,91 @@
 	</tbody>
 </table>
 
-<p><strong><span style="font-size:26px;">Video Aspect Ratio Change</span></strong></p>
+<p><strong><span style="font-size:26px;">Alternative Energy Functions - Forward Energy</span></strong></p>
 
-<p><strong><span style="font-size:26px;">Alternative Energy Functions</span></strong></p>
+<p>The idea behind forward energy was that&nbsp; we now want to take into account not only the optimal seams in the current image, but some semblance of the optimal seams at every level of the cutting the image. We use 3 different energy functions at each level, these energy functions are essentially the image with one horizontal/vertical gradient, and two more images with diagonal gradient filters applied to them. We perform dynamic programming using these 3 energy images as added costs to consider when calculating optimal seam cost. An example of the three energy images for vertical seam computation is shown below along with the standard magnitude of gradients energy function.</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>C_L<img alt="" src="/cs445/project/forward_energy_left.jpg" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>C_U</p>
+
+			<p><img alt="" src="/cs445/project/forward_energy_up.jpg" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>C_R</p>
+
+			<p><img alt="" src="/cs445/project/forward_energy_right.jpg" style="width: 130px; height: 101px;" /></p>
+			</td>
+			<td>
+			<p>Original Energy Function<img alt="" src="/cs445/project/house_original_energy.jpg" style="width: 130px; height: 101px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
 
 <p></p>
 
-<p></p>
+<p>The&nbsp;total&nbsp;seam cost images&nbsp;are shown below&nbsp; for the original energy function in the vertical and horizontal directions respectively, then for the forward energy function for the vertical and horizontal directions. As you can see the original energy function results in concentrated costs around/after the strongest features in the image. In forward energy, things are more equal, and some seams pass right through the house/rocks in this image.&nbsp;</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original Energy Vertical Seam Costs <img alt="" src="/cs445/project/original_vertical_cost.jpg" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>&nbsp;Original Energy Horizontal Seam Costs<img alt="" src="/cs445/project/original_horizontal_cost.jpg" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>Forward Energy Vertical Seam Costs<img alt="" src="/cs445/project/forward_vertical_cost.jpg" style="width: 130px; height: 101px;" /></p>
+			</td>
+			<td>
+			<p>Forward Energy Horizontal Seam Costs<img alt="" src="/cs445/project/forward_horizontal_cost.jpg" style="width: 130px; height: 101px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>To show just a little bit of the difference, we can see that the optimal seams differ based on the energy function used.</p>
 
 <p></p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original Energy Optimal Seams<img alt="" src="/cs445/project/original_energy_optimal_seams.jpg" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>&nbsp;Forward Energy Optimal seams<img alt="" src="/cs445/project/forward_energy_optimal_seams.jpg" style="width: 130px; height: 102px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>The final results for the same width and height decrease (320, 480) -&gt; (240, 320), width first, are shown below. for different energy functions.</p>
+
+<p></p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>Original Image<img alt="" src="/cs445/project/img1.png" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>Original Energy Retargeted<img alt="" src="/cs445/project/original_energy_final_house.jpg" style="width: 130px; height: 102px;" /></p>
+			</td>
+			<td>
+			<p>Forward Energy Retargeteds<img alt="" src="/cs445/project/forward_energy_final_house.jpg" style="width: 130px; height: 101px;" /></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
 </body>
 </html>

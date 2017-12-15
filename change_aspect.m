@@ -122,7 +122,7 @@ function out = change_aspect(im, new_n, new_m, energy_type)
             E = energy(iterate_im, energy_type);
             [vert_seam,~] = vertical_seam(iterate_im, E);
             iterate_im = cut(iterate_im, vert_seam, 'vertical');
-            imshow(iterate_im)
+            figure(4),imshow(iterate_im)
             %imshow(vert_seam)
             %imshow(mat2gray(E))
         end
@@ -137,7 +137,7 @@ function out = change_aspect(im, new_n, new_m, energy_type)
             E = energy(iterate_im, energy_type);
             [horz_seam,~] = horizontal_seam(iterate_im, E);
             iterate_im = cut(iterate_im, horz_seam, 'horizontal');
-            imshow(iterate_im)
+            figure(4),imshow(iterate_im)
             %imshow(horz_seam)
         end
         

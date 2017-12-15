@@ -10,26 +10,29 @@ function output = object_removal(im,energy_type)
         [r,c] = find(removal_mask==1);
 
         E = energy(im_i, energy_type);
+        figure(2), imagesc(E), colormap jet
+        
         E(removal_mask==1) = -max(h,w)*max(E(:));
         % E(protection_mask==1) = inf;
-        figure(2), imagesc(E), colormap jet
-        figure(3)
+        %figure(3), imshow(E);
+        
         %Find the maximum of the vertical and horizontal diameters
         if max(r) - min(r) > max(c) - min(c)
             [vert_seam,~] = vertical_seam(im_i, E);
             im_i = cut(im_i, vert_seam, 'vertical');
             removal_mask = cut(removal_mask, vert_seam,'vertical');
-            imshow(im_i)
+            figure(3),imshow(im_i);
         else
             % horizontal seam removal
             [horz_seam,~] = horizontal_seam(im_i, E);
             im_i = cut(im_i, horz_seam, 'horizontal');
             removal_mask = cut(removal_mask, horz_seam, 'horizontal');
-            imshow(im_i)
+            figure(3),imshow(im_i);
         end
     end
     
-    [h_new, w_new, ~] = size(im_i);
-    output = enlarge(im_i,w-w_new,'width');
-    output = enlarge(output,h-h_new,'height');
+%     [h_new, w_new, ~] = size(im_i);
+%     output = enlarge(im_i,w-w_new,'width');
+%     output = enlarge(output,h-h_new,'height');
+       output = im_i;
 end
