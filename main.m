@@ -11,8 +11,8 @@ energy_type = 'gradient';
 %energy_type = 'face';
 
 %% Object removal
-edited_image = object_removal(im, energy_type);
-figure(11), imshow(edited_image);
+% edited_image = object_removal(im, energy_type);
+% figure(11), imshow(edited_image);
 
 %% Calculate vertical seam
 E = energy(im, energy_type);

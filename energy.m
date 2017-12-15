@@ -12,8 +12,6 @@ function Gmag = energy(im_input, type)
         % which constitute the face
         faceDetector = vision.CascadeObjectDetector();
         bbox = step(faceDetector, im_input);
-
-        % [h, w] = size(im_input);
         
         if ~isempty(bbox)
             x1 = ceil(bbox(1));
