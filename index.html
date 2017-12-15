@@ -238,7 +238,7 @@
 
 <p>Object removal is an interesting application of seam carving. The idea is to allow the user to select a region of their picture that they would like removed from the photo. We then modify the energy values i.e. the cost of having a seam go through the object to be extremely low. In other words, we make it favorable to remove the pixels in the selected region. Initially, we wanted to set the cost to be -inf. However, this allows ANY path within the selected object to be of minimum cost and indeed the longest&nbsp;seam within that object (most oblique) will be the one chosen.&nbsp;Instead, we set the cost of the selected region to be -max(width, height)*max(Energy(:)). This lower bounds seam cost to 0. Object protection is simply the inverse of this, an instance of which is facial feature preservation, done in the next section.</p>
 
-<p>The example similar to that in the paper&nbsp;</p>
+<p>The example similar to that in the paper (https://www.freepik.com/free-photo/couple-holding-hands-walking-away_856900.htm)</p>
 
 <table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
 	<tbody>
@@ -262,7 +262,7 @@
 	</tbody>
 </table>
 
-<p>Another example: What would&#39;ve been such a nice picture was ruined. With seam carving, we can fix it, however.&nbsp;</p>
+<p>Another example: What would&#39;ve been such a nice picture was ruined. With seam carving, we can fix it, however.&nbsp; (https://imgur.com/gallery/OI8wVzQ)</p>
 
 <table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
 	<tbody>
@@ -286,7 +286,7 @@
 	</tbody>
 </table>
 
-<p>Another example: Find the missing car!!</p>
+<p>Another example: Find the missing car!! (https://www.shine.cn/newsimage/2016/03/22/020160322000524.jpg)</p>
 
 <table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
 	<tbody>
@@ -331,7 +331,7 @@
 	</tbody>
 </table>
 
-<p>Another example. Image from (https://www.sephora.com/contentimages/VideoImagesNEW/051217/ppage_KORA_faceoil_051217_video.jpg):</p>
+<p>Another example:</p>
 
 <table border="1" cellpadding="1" cellspacing="1" style="width:500px;">
 	<tbody>
